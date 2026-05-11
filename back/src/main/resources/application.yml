@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: assurance
+  profiles:
+    active: dev
+
+server:
+  port: 8080
+
+app:
+  jwt:
+    secret: RahiouiYoussefSecretKeyForJWTAssuranceExamJEE2024MustBe256BitsLong
+    expiration: 86400000
