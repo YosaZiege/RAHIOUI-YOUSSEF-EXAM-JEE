@@ -5,7 +5,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { tap } from 'rxjs/operators';
 import { AuthResponse, LoginRequest } from '../models/auth.model';
 
-const API_URL = 'http://localhost:8081/api';
+const BASE_URL = 'http://localhost:8080';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -24,11 +24,12 @@ export class AuthService {
   }
 
   login(credentials: LoginRequest) {
-    return this.http.post<AuthResponse>(`${API_URL}/auth/login`, credentials).pipe(
+    return this.http.post<AuthResponse>(`${BASE_URL}/auth/login`, credentials).pipe(
       tap((response) => {
         if (isPlatformBrowser(this.platformId)) {
-          localStorage.setItem('access_token', response.token);
+          localStorage.setItem('access_token', response.accessToken);
           localStorage.setItem('username', response.username);
+          localStorage.setItem('roles', JSON.stringify(response.roles));
         }
         this.isLoggedIn.set(true);
         this.username.set(response.username);
@@ -40,6 +41,7 @@ export class AuthService {
     if (isPlatformBrowser(this.platformId)) {
       localStorage.removeItem('access_token');
       localStorage.removeItem('username');
+      localStorage.removeItem('roles');
     }
     this.isLoggedIn.set(false);
     this.username.set(null);

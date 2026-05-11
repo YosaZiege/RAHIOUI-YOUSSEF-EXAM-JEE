@@ -15,8 +15,8 @@ export class Login {
   private router = inject(Router);
 
   form = this.fb.group({
-    username: ['', [Validators.required]],
-    password: ['', [Validators.required]],
+    username: ['', Validators.required],
+    password: ['', Validators.required],
   });
 
   loading = signal(false);
@@ -30,7 +30,7 @@ export class Login {
       next: () => this.router.navigate(['/customers']),
       error: () => {
         this.loading.set(false);
-        this.error.set('Invalid username or password. Please try again.');
+        this.error.set('Identifiants incorrects. Veuillez réessayer.');
       },
     });
   }

@@ -1,3 +1,10 @@
-/* You can add global styles to this file, and also import other style files */
-
 @import 'tailwindcss';
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: #070c18;
+  color: #f1f5f9;
+  font-family: system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}

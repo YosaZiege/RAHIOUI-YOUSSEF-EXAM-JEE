@@ -1,0 +1,148 @@
+.login-page {
+  min-height: 100vh;
+  background: #070c18;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+.aurora { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+
+.orb { position: absolute; border-radius: 50%; filter: blur(90px); }
+
+.orb-1 {
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(109,40,217,0.35) 0%, transparent 70%);
+  top: -200px; left: -200px;
+}
+
+.orb-2 {
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(29,78,216,0.3) 0%, transparent 70%);
+  bottom: -200px; right: -100px;
+}
+
+.orb-3 {
+  width: 350px; height: 350px;
+  background: radial-gradient(circle, rgba(6,182,212,0.2) 0%, transparent 70%);
+  top: 50%; right: 25%;
+}
+
+.login-card {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 440px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 28px;
+  padding: 2.5rem;
+  backdrop-filter: blur(24px);
+  box-shadow: 0 32px 64px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.06);
+}
+
+.login-brand { display: flex; align-items: center; gap: 1rem; margin-bottom: 2.5rem; }
+
+.brand-icon {
+  font-size: 2rem;
+  width: 56px; height: 56px;
+  background: linear-gradient(135deg, rgba(109,40,217,0.4), rgba(79,70,229,0.4));
+  border: 1px solid rgba(109,40,217,0.3);
+  border-radius: 16px;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.brand-name {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #f8fafc;
+  letter-spacing: -0.5px;
+  line-height: 1.2;
+}
+
+.brand-name span {
+  background: linear-gradient(135deg, #818cf8, #67e8f9);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.brand-tagline { font-size: 0.8125rem; color: #475569; margin-top: 2px; }
+
+.error-box {
+  background: rgba(239,68,68,0.1);
+  border: 1px solid rgba(239,68,68,0.25);
+  color: #fca5a5;
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  margin-bottom: 1.5rem;
+}
+
+.login-form { display: flex; flex-direction: column; gap: 1.25rem; }
+
+.field { display: flex; flex-direction: column; gap: 0.5rem; }
+
+.field label { font-size: 0.8125rem; font-weight: 500; color: #94a3b8; }
+
+.field input {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+  padding: 0.8125rem 1rem;
+  color: #f1f5f9;
+  font-size: 0.9375rem;
+  outline: none;
+  transition: border-color 0.2s, background 0.2s;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.field input::placeholder { color: #1e293b; }
+.field input:focus { border-color: rgba(129,140,248,0.5); background: rgba(255,255,255,0.07); }
+
+.btn-login {
+  margin-top: 0.5rem;
+  padding: 0.9375rem;
+  background: linear-gradient(135deg, #6d28d9, #4f46e5);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.9375rem;
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 8px 24px rgba(109,40,217,0.4);
+}
+
+.btn-login:hover:not(:disabled) { opacity: 0.92; transform: translateY(-2px); box-shadow: 0 12px 32px rgba(109,40,217,0.5); }
+.btn-login:disabled { opacity: 0.45; cursor: not-allowed; }
+
+.spinner {
+  width: 18px; height: 18px;
+  border: 2px solid rgba(255,255,255,0.25);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.65s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.hint-box {
+  margin-top: 2rem;
+  padding: 1rem;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 14px;
+}
+
+.hint-title { font-size: 0.6875rem; font-weight: 600; color: #334155; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.625rem; }
+
+.hint-rows { display: flex; flex-direction: column; gap: 0.3rem; }
+.hint-rows span { font-size: 0.8125rem; color: #2d3a4a; }
+.hint-rows b { color: #475569; }

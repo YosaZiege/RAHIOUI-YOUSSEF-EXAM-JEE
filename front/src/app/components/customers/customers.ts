@@ -1,95 +1,98 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
-import { RouterLink } from '@angular/router';
-import { FormsModule } from '@angular/forms';
-import { Customer } from '../../models/customer.model';
-import { CustomerService } from '../../services/customer';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Client } from '../../models/client.model';
+import { ClientService } from '../../services/client';
 
 @Component({
-  selector: 'app-customers',
-  imports: [RouterLink, FormsModule],
+  selector: 'app-clients',
+  imports: [ReactiveFormsModule],
   templateUrl: './customers.html',
   styleUrl: './customers.css',
 })
 export class Customers implements OnInit {
-  private customerService = inject(CustomerService);
+  private fb = inject(FormBuilder);
+  private clientService = inject(ClientService);
 
-  customers = signal<Customer[]>([]);
+  clients = signal<Client[]>([]);
   loading = signal(false);
-  error = signal<string | null>(null);
-  searchInput = '';
+  showForm = signal(false);
+  selectedClient = signal<Client | null>(null);
+  clientToDelete = signal<Client | null>(null);
 
-  editingCustomer = signal<Customer | null>(null);
-  editForm = { name: '', email: '' };
+  form = this.fb.group({
+    nom: ['', [Validators.required, Validators.minLength(2)]],
+    email: ['', [Validators.required, Validators.email]],
+  });
 
-  ngOnInit() {
-    this.loadCustomers();
-  }
+  ngOnInit() { this.load(); }
 
-  loadCustomers() {
+  load() {
     this.loading.set(true);
-    this.error.set(null);
-    this.customerService.getCustomers().subscribe({
-      next: (data) => {
-        this.customers.set(data);
-        this.loading.set(false);
-      },
-      error: () => {
-        this.error.set('Failed to load customers.');
-        this.loading.set(false);
-      },
+    this.clientService.getAll().subscribe({
+      next: (data) => { this.clients.set(data); this.loading.set(false); },
+      error: () => this.loading.set(false),
     });
   }
 
-  search() {
-    if (!this.searchInput.trim()) {
-      this.loadCustomers();
-      return;
+  onSearch(event: Event) {
+    const q = (event.target as HTMLInputElement).value.trim();
+    if (q) {
+      this.clientService.search(q).subscribe(data => this.clients.set(data));
+    } else {
+      this.load();
     }
-    this.loading.set(true);
-    this.error.set(null);
-    this.customerService.searchCustomers(this.searchInput).subscribe({
-      next: (data) => {
-        this.customers.set(data);
-        this.loading.set(false);
-      },
-      error: () => {
-        this.error.set('Search failed.');
-        this.loading.set(false);
-      },
+  }
+
+  openCreate() {
+    this.selectedClient.set(null);
+    this.form.reset();
+    this.showForm.set(true);
+  }
+
+  openEdit(client: Client) {
+    this.selectedClient.set(client);
+    this.form.patchValue({ nom: client.nom, email: client.email });
+    this.showForm.set(true);
+  }
+
+  closeForm() {
+    this.showForm.set(false);
+    this.selectedClient.set(null);
+    this.form.reset();
+  }
+
+  saveClient() {
+    if (this.form.invalid) return;
+    const data = this.form.value as { nom: string; email: string };
+    const sel = this.selectedClient();
+    (sel ? this.clientService.update(sel.id!, data) : this.clientService.create(data))
+      .subscribe(() => { this.closeForm(); this.load(); });
+  }
+
+  confirmDelete(client: Client) { this.clientToDelete.set(client); }
+
+  deleteClient() {
+    const c = this.clientToDelete();
+    if (!c?.id) return;
+    this.clientService.delete(c.id).subscribe(() => {
+      this.clientToDelete.set(null);
+      this.load();
     });
   }
 
-  clearSearch() {
-    this.searchInput = '';
-    this.loadCustomers();
+  getInitials(nom: string): string {
+    return nom.split(' ').slice(0, 2).map(n => n[0]?.toUpperCase() ?? '').join('');
   }
 
-  startEdit(customer: Customer) {
-    this.editingCustomer.set(customer);
-    this.editForm = { name: customer.name, email: customer.email };
-  }
-
-  cancelEdit() {
-    this.editingCustomer.set(null);
-  }
-
-  saveEdit() {
-    const c = this.editingCustomer();
-    if (!c) return;
-    this.customerService.updateCustomer(c.id, this.editForm).subscribe({
-      next: () => {
-        this.editingCustomer.set(null);
-        this.loadCustomers();
-      },
-      error: () => this.error.set('Failed to update customer.'),
-    });
-  }
-
-  deleteCustomer(id: number) {
-    if (!confirm('Delete this customer? This action cannot be undone.')) return;
-    this.customerService.deleteCustomer(id).subscribe({
-      next: () => this.loadCustomers(),
-      error: () => this.error.set('Failed to delete customer.'),
-    });
+  getAvatarStyle(nom: string): { [key: string]: string } {
+    const g = [
+      'linear-gradient(135deg,#7c3aed,#4f46e5)',
+      'linear-gradient(135deg,#0ea5e9,#06b6d4)',
+      'linear-gradient(135deg,#059669,#0d9488)',
+      'linear-gradient(135deg,#d97706,#ef4444)',
+      'linear-gradient(135deg,#db2777,#9333ea)',
+      'linear-gradient(135deg,#2563eb,#7c3aed)',
+    ];
+    return { background: g[(nom.charCodeAt(0) + nom.length) % g.length] };
   }
 }
