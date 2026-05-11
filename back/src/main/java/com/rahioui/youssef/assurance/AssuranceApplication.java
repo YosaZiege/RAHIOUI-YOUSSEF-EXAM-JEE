@@ -67,7 +67,6 @@ public class AssuranceApplication implements CommandLineRunner {
         Client c4 = clientRepository.save(Client.builder().nom("Aicha Benali").email("aicha@gmail.com").build());
         Client c5 = clientRepository.save(Client.builder().nom("Karim Idrissi").email("karim@gmail.com").build());
 
-        // Contrats Automobile
         ContratAssuranceAutomobile ca1 = new ContratAssuranceAutomobile();
         setCommon(ca1, c1, LocalDate.of(2024, 1, 15), 250.0, 12, 80.0);
         ca1.setNumeroImmatriculation("A-12345-B");
@@ -91,7 +90,6 @@ public class AssuranceApplication implements CommandLineRunner {
         ca3.setDateValidation(LocalDate.of(2023, 6, 5));
         contratRepository.save(ca3);
 
-        // Contrats Habitation
         ContratAssuranceHabitation ch1 = new ContratAssuranceHabitation();
         setCommon(ch1, c1, LocalDate.of(2024, 2, 1), 150.0, 12, 85.0);
         ch1.setTypeLogement(TypeLogement.APPARTEMENT);
@@ -116,7 +114,6 @@ public class AssuranceApplication implements CommandLineRunner {
         ch3.setStatut(StatutContrat.RESILIE);
         contratRepository.save(ch3);
 
-        // Contrats Santé
         ContratAssuranceSante cs1 = new ContratAssuranceSante();
         setCommon(cs1, c2, LocalDate.of(2024, 4, 1), 400.0, 12, 95.0);
         cs1.setNiveauCouverture(NiveauCouverture.PREMIUM);
@@ -137,7 +134,6 @@ public class AssuranceApplication implements CommandLineRunner {
         cs3.setNombrePersonnesCouvertes(2);
         contratRepository.save(cs3);
 
-        // Paiements
         seedPaiements(ca1, ch1, cs1);
     }
 
@@ -162,7 +158,6 @@ public class AssuranceApplication implements CommandLineRunner {
                         .build();
                 paiementRepository.save(p);
             }
-            // Paiement exceptionnel
             Paiement extra = Paiement.builder()
                     .date(LocalDate.now().minusDays(5))
                     .montant(50.0)
