@@ -1,13 +1,12 @@
-package com.youssef_rahioui.bank;
+package com.rahioui.youssef.assurance;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class BankApplicationTests {
+class AssuranceApplicationTests {
 
-	@Test
-	void contextLoads() {
-	}
-
+    @Test
+    void contextLoads() {
+    }
 }
