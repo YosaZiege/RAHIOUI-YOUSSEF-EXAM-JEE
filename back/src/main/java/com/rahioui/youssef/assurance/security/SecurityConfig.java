@@ -8,11 +8,19 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.header.writers.frameoptions.XFrameOptionsHeaderWriter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
+    private static final String[] PUBLIC_PATHS = {
+        "/api/**",
+        "/h2-console/**",
+        "/swagger-ui/**",
+        "/swagger-ui.html",
+        "/v3/api-docs/**"
+    };
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -23,10 +31,14 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .csrf(AbstractHttpConfigurer::disable)
+            // Désactive X-Frame-Options pour que la console H2 fonctionne
             .headers(headers -> headers
-                .frameOptions(frame -> frame.sameOrigin())
+                .frameOptions(frame -> frame.disable())
             )
-            .authorizeHttpRequests(auth -> auth.anyRequest().permitAll());
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers(PUBLIC_PATHS).permitAll()
+                .anyRequest().authenticated()
+            );
         return http.build();
     }
 }

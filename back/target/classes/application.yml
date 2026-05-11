@@ -11,3 +11,12 @@ app:
   jwt:
     secret: RahiouiYoussefSecretKeyForJWTAssuranceExamJEE2024MustBe256BitsLong
     expiration: 86400000
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    try-it-out-enabled: true
+    operations-sorter: alpha
+  packages-to-scan: com.rahioui.youssef.assurance.web
